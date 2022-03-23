@@ -66,6 +66,7 @@ std::ostream& operator<<(std::ostream& stream, Invoice &something)
         b = b + something.items[i].net_fun() * something.items[i].amount_fun();
         a = a + (something.items[i].net_fun() * something.items[i].amount_fun()) + (something.items[i].net_fun() * something.items[i].amount_fun()) * something.items[i].vat_fun()/100;
     }
+
     stream <<  std::endl << "Total without VAT: " << b << std::endl << "Total with VAT: " << a;
 
     return (stream);
