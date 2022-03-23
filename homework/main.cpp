@@ -6,12 +6,12 @@ class Item
 {
 private:
     std::string Name;
-    int VAT_tax_type;
+    float VAT_tax_type;
     float Unit_net_price;
     float Amount_sold;
 
 public:
-    Item(std::string name = "unknown", int VAT = 0, float unit = 0, float amount = 0)
+    Item(std::string name = "unknown", float VAT = 0, float unit = 0, float amount = 0)
     {
         Name = name;
         VAT_tax_type = VAT;
@@ -19,11 +19,10 @@ public:
         Amount_sold = amount;
     }
 
-    std::string dumb_af_0 (){return Name ;}
-    int dumb_af_1 (Item abc){return abc.VAT_tax_type;}
-    float dumb_af_2 (Item abc){return abc.Unit_net_price;}
-    float dumb_af_3 (Item abc){return abc.Amount_sold;}
-
+    std::string name_fun (){return Name ;}
+    float vat_fun (){return VAT_tax_type;}
+    float net_fun (){return Unit_net_price;}
+    float amount_fun (){return Amount_sold;}
 };
 
 class Invoice
@@ -45,29 +44,36 @@ public:
         items.emplace_back(item);
     }
 
-//    std::string just_dumb_0(Item abc)
-//    {
-
-//    }
-
     friend std::ostream& operator<<(std::ostream& stream, Invoice &something);
 };
 
 std::ostream& operator<<(std::ostream& stream, Invoice &something)
 {
+    float a = 0;
+    float b = 0;
+
     stream << "------------------VAT invoice------------------" << std::endl
            << "===============================================" << std::endl
-           << "Seller: " << something.seller << "      " << something.buyer << std::endl << std::endl
-           << something.items[0].dumb_af_0();
+           << "seller: " << something.seller << " buyer: " << something.buyer << std::endl << std::endl;
 
+    for(int i = 0; i < (int)something.items.size(); i++)
+    {
+        stream << "name: "<< something.items[i].name_fun()
+               << " VAT: " << something.items[i].vat_fun()
+               << " net: " << something.items[i].net_fun()
+               << " amt: " << something.items[i].amount_fun() << std::endl;
 
+        b = b + something.items[i].net_fun() * something.items[i].amount_fun();
+        a = a + (something.items[i].net_fun() * something.items[i].amount_fun()) + (something.items[i].net_fun() * something.items[i].amount_fun()) * something.items[i].vat_fun()/100;
+    }
+    stream <<  std::endl << "Total without VAT: " << b << std::endl << "Total with VAT: " << a;
 
     return (stream);
 }
 
 int main()
 {
-    Invoice inv(777, 999);
+    Invoice inv(7770003699, 1123456789);
     inv.add_item(Item("M3 screw", 23, 0.37, 100));
     inv.add_item(Item("2 mm drill", 8, 2.54, 2));
     std::cout << inv << std::endl;
